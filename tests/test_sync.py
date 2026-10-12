@@ -513,6 +513,16 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(self.daemon.conn.execute("SELECT state,error FROM outbox").fetchone()[:], ("failed", "guard"))
         self.assertFalse(any(r["method"] != "GET" for r in self.server.requests))
 
+    def test_the_outbox_never_uploads_files_from_a_path(self) -> None:
+        # Uploads are done by the helper with its own checks; a queued row naming a path
+        # (for example written by another process) must not make the daemon read that file.
+        for kind in ("upload", "file", "files", "voice"):
+            self.queue(kind, {"path": "/etc/hostname"})
+        self.sync()
+        states = {row[0] for row in self.daemon.conn.execute("SELECT state FROM outbox")}
+        self.assertEqual(states, {"failed"})
+        self.assertFalse(any(r["method"] != "GET" for r in self.server.requests))
+
     def test_outbox_ambiguous_post_not_retried(self) -> None:
         self.queue("send", {"text": "Synthetic uncertain"})
         self.sync()

@@ -623,10 +623,8 @@ class SyncDaemon:
                     result = self.client.remove_reaction(token, mid, previous)
                 return result
             return self.client.add_reaction(token, mid, emoji)
-        if kind in ("file", "files", "voice", "upload"):
-            return self.client.upload_and_share(token, payload["path"], caption=payload.get("caption"),
-                                                voice=kind == "voice" or bool(payload.get("voice")))
-        # The daemon deliberately does NOT support queued read-marker operations.
+        # Uploads are never queued (the helper uploads files itself, with its own path checks),
+        # and the daemon deliberately does NOT support queued read-marker operations.
         raise ValueError("unsupported outbox action")
 
     def process_outbox(self) -> None:

@@ -58,6 +58,7 @@ is collected in [docs/TALK_API_NOTES.md](docs/TALK_API_NOTES.md).
 - `systemd --user`
 - A Nextcloud server with the Talk app (chat, reactions, polls and the other features
   used are checked at runtime)
+- `inotify-tools` (`inotifywait`) and `util-linux` (`setpriv`), which the interface uses to notice mirror updates at once
 - Optional: `zenity` (file chooser), `ffmpeg` (voice message conversion),
   `wl-clipboard` (paste), `notify-send` (notifications), the Noto Color Emoji font
   (emoji room avatars)

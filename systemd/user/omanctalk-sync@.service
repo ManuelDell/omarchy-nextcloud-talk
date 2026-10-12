@@ -39,6 +39,12 @@ MemoryDenyWriteExecute=true
 CapabilityBoundingSet=
 AmbientCapabilities=
 SystemCallArchitectures=native
+# The daemon only talks HTTPS and local unix sockets, and needs no special system calls.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+ProtectProc=invisible
+ProcSubset=pid
 UMask=0077
 
 [Install]

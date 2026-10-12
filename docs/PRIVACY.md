@@ -39,9 +39,10 @@ rooms as read. The app marks the room you open as read, like any chat client.
 - Logs (the journal of `omanctalk-sync@<account>.service`) contain status and error
   categories only. They are written to never include message text, user names, room
   names, file names or credentials; error texts from the server are not echoed.
-- Desktop notifications are **off by default**. When enabled, a popup can show a short
-  preview of the message; turn the preview off in the settings if you do not want
-  message text in popups.
+- Desktop notifications are **off by default**. When enabled, a popup only says that new
+  messages arrived ("New messages. Open OmaNCTalk to read them."); it never contains
+  message text, sender or room name. (The settings also list a "preview" switch; it is
+  stored but currently has no effect on the popup text.)
 
 ## Removing your data
 
