@@ -1,0 +1,12 @@
+#!/usr/bin/python3
+"""Fast JSON entry point for OmaNCTalk."""
+import os
+import sys
+
+# Keep the interpreter's existing stdlib cache; a global pycache_prefix forces
+# every stdlib module to be recompiled on the first UI request.
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+from omanctalk_core import main
+
+if __name__ == "__main__":
+    raise SystemExit(main())

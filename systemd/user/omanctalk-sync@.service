@@ -1,0 +1,45 @@
+[Unit]
+Description=Keep the OmaNCTalk offline mirror in sync for account %I
+Documentation=https://nextcloud-talk.readthedocs.io/
+PartOf=graphical-session.target
+After=graphical-session.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.config/omarchy/plugins/io.github.manueldell.omanctalk/bin/omanctalk-sync %i
+Restart=on-failure
+RestartSec=10
+# An invalid app password needs user action, not repeated login attempts.
+RestartPreventExitStatus=3
+TimeoutStopSec=40
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=read-only
+# StateDirectory creates the default private root before starting the daemon.
+# Non-default XDG_STATE_HOME needs a drop-in with an additional ReadWritePaths.
+StateDirectory=omanctalk
+StateDirectoryMode=0700
+CacheDirectory=omanctalk
+CacheDirectoryMode=0700
+ReadWritePaths=%h/.local/state/omanctalk %h/.cache/omanctalk
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+UMask=0077
+
+[Install]
+WantedBy=graphical-session.target

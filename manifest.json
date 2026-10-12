@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.manueldell.omanctalk",
+  "name": "OmaNCTalk",
+  "version": "0.1.0",
+  "author": "ManuelDell",
+  "license": "MIT",
+  "description": "Nextcloud Talk for the Omarchy shell: local-first chats that open instantly and remain searchable offline, with quick replies, media and notifications.",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "activation": "on-demand",
+  "entryPoints": {
+    "service": "plugins/omanctalk/Service.qml",
+    "barWidget": "plugins/omanctalk/BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "OmaNCTalk",
+    "description": "Open synced direct chats and standalone groups, with unread messages at a glance.",
+    "category": "Communication",
+    "aliases": [
+      "talk",
+      "nextcloud",
+      "chat",
+      "messages"
+    ],
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

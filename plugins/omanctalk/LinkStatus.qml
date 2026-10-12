@@ -1,0 +1,112 @@
+import QtQuick
+import qs.Commons
+import qs.Ui
+
+Rectangle {
+    id: root
+    property string state: "unknown"
+    property string pauseReason: ""
+    property color foreground
+    property color accent
+    property color dim
+    property color urgent
+    property string fontFamily
+    property bool compact: false
+    property bool busy: false
+    property bool actionEnabled: false
+    property bool demo: false
+    signal actionRequested
+    readonly property bool expired: state === "relink-required" || state === "unlinked"
+    readonly property string label: expired ? "Sign-in required" : state === "closed" ? "Closed · sync paused" : state === "offline" ? "Offline · local archive" : state === "connected" ? "Talk · connected" : state === "connecting" ? "Connecting…" : state === "stopped" ? "Sync stopped" : "Checking connection…"
+    readonly property string detail: expired ? "Sign in in Accounts settings to receive new messages." : state === "closed" ? "Open to receive new messages." : state === "connected" ? "Your messages are syncing." : state === "connecting" ? "Connecting to your Nextcloud server." : state === "offline" ? "Your saved chats are available." : state === "stopped" ? "New messages are not arriving." : "Reading this account’s status."
+    readonly property string action: expired ? "Accounts" : state === "closed" ? "Open" : state === "offline" ? "Go online" : state === "stopped" && root.pauseReason === "" ? "Resume" : ""
+    width: parent.width
+    height: Style.space(root.compact ? 28 : 66)
+    radius: root.compact ? height / 2 : Style.cornerRadius
+    color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.06)
+    border.width: 1
+    border.color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.18)
+    Rectangle {
+        x: Style.space(12)
+        y: root.compact ? (parent.height - height) / 2 : Style.space(18)
+        width: Style.space(6)
+        height: width
+        radius: width / 2
+        color: root.expired ? root.urgent : root.state === "connected" ? root.accent : root.dim
+    }
+    Column {
+        anchors.left: parent.left
+        anchors.leftMargin: Style.space(26)
+        anchors.right: statusAction.left
+        anchors.rightMargin: Style.space(8)
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: Style.space(4)
+        Text {
+            textFormat: Text.PlainText
+            width: parent.width
+            text: root.compact && root.state === "connected" ? "Connected" : root.label
+            elide: Text.ElideRight
+            color: root.foreground
+            font.family: root.fontFamily
+            font.pixelSize: Style.font.caption
+        }
+        Text {
+            textFormat: Text.PlainText
+            width: parent.width
+            visible: !root.compact
+            text: root.detail
+            elide: Text.ElideRight
+            color: root.dim
+            font.family: root.fontFamily
+            font.pixelSize: Style.font.caption
+        }
+    }
+    Rectangle {
+        id: statusAction
+        activeFocusOnTab: true
+        enabled: root.actionEnabled && !root.busy && !root.demo
+        border.width: activeFocus ? 1 : 0
+        border.color: root.accent
+        Accessible.role: Accessible.Button
+        Accessible.name: root.action
+        Accessible.onPressAction: if (actionMouse.enabled)
+            root.actionRequested()
+        Keys.onReturnPressed: if (actionMouse.enabled)
+            root.actionRequested()
+        Keys.onSpacePressed: if (actionMouse.enabled)
+            root.actionRequested()
+        objectName: root.compact ? "railHeaderLinkAction" : "railLinkAction"
+        anchors.right: parent.right
+        anchors.rightMargin: Style.space(10)
+        anchors.verticalCenter: parent.verticalCenter
+        width: visible ? actionText.implicitWidth + Style.space(18) : 0
+        height: Style.space(30)
+        visible: !root.compact && root.action !== ""
+        radius: Style.cornerRadius
+        color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b, actionMouse.containsMouse ? 0.22 : 0.12)
+        opacity: actionMouse.enabled ? 1 : 0.5
+        Text {
+            textFormat: Text.PlainText
+            id: actionText
+            anchors.centerIn: parent
+            text: root.busy ? "Signing in…" : root.action
+            color: root.accent
+            font.family: root.fontFamily
+            font.pixelSize: Style.font.caption
+        }
+        MouseArea {
+            id: actionMouse
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            enabled: !root.demo && root.actionEnabled && !root.busy
+            onClicked: root.actionRequested()
+        }
+    }
+    HoverHandler { id: statusHover }
+    PanelToolTip {
+        visible: root.compact && statusHover.hovered
+        text: root.label + " · " + root.detail
+    }
+
+}

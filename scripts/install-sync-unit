@@ -1,0 +1,28 @@
+#!/bin/bash
+# Installs the omanctalk-sync@.service template for the current user and reloads systemd.
+# It does not start anything: signing in from the app starts the service for that account.
+# Undo: ./scripts/install-sync-unit --remove
+set -euo pipefail
+
+here="$(cd "$(dirname "$0")/.." && pwd)"
+unit="omanctalk-sync@.service"
+target_dir="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
+expected="$HOME/.config/omarchy/plugins/io.github.manueldell.omanctalk"
+
+if [[ "${1:-}" == "--remove" ]]; then
+  rm -f "$target_dir/$unit"
+  systemctl --user daemon-reload
+  echo "Removed $target_dir/$unit"
+  exit 0
+fi
+
+# The unit starts the daemon from the plugin folder, so the plugin has to live there.
+if [[ "$(readlink -f "$here")" != "$(readlink -f "$expected" 2>/dev/null || true)" ]]; then
+  echo "warning: the unit expects the plugin at $expected (this checkout is $here)." >&2
+  echo "         Install or link the plugin there, or edit ExecStart in the copied unit." >&2
+fi
+
+install -d -m 0755 "$target_dir"
+install -m 0644 "$here/systemd/user/$unit" "$target_dir/$unit"
+systemctl --user daemon-reload
+echo "Installed $target_dir/$unit"
