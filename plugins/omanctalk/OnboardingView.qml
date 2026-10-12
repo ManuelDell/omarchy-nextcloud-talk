@@ -48,7 +48,7 @@ Rectangle {
     Row {
       spacing: Style.space(10)
       Button {
-        text: root.linking ? "Waiting for browser…" : "Im Browser anmelden"
+        text: root.linking ? "Waiting for browser…" : "Sign in with browser"
         enabled: !root.demoMode && !!root.operations && !root.operations.busy
         foreground: root.foreground
         accent: root.accent

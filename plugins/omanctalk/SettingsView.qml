@@ -1103,7 +1103,7 @@ Rectangle {
           }
           Button {
             objectName: "setting-link"
-            text: "Im Browser anmelden"
+            text: "Sign in with browser"
             enabled: row.available !== false && accountName.text.trim() !== ""
             foreground: settings.foreground
             accent: settings.accent

@@ -13,6 +13,14 @@ OmaNCTalk is a fork of the idea and the interface of
 > **Status:** early release (0.1.0), developed against Nextcloud 33 with Talk.
 > Other server versions are untested.
 
+## Screenshots
+
+![The OmaNCTalk window with the chat list and a conversation](docs/screenshots/app.png)
+
+![The sign-in view](docs/screenshots/sign-in.png)
+
+*Both screenshots were taken in the app's demo mode (`omarchy-shell io.github.manueldell.omanctalk openApp '{"demo":true}'`) with invented chats and people.*
+
 ## What it does
 
 - **Instant start, offline search.** The window and the bar dropdown read a local

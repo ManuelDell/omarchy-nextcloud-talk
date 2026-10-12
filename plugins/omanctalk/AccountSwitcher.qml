@@ -263,7 +263,7 @@ Item {
         Text {
           textFormat: Text.PlainText
           anchors.centerIn: parent
-          text: "Im Browser anmelden"
+          text: "Sign in with browser"
           color: root.background
           font.family: root.fontFamily
           font.pixelSize: Style.font.caption
